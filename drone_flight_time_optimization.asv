@@ -18,11 +18,11 @@ lal3_hover_amp = database.motor_propeller(43).fitted_th_vs_amp(lal3_motor_load)*
 
 lal3_hover_time = (database.battery(11).capacity/1000)/lal3_hover_amp*60;
 
-lal3_real_hover_time = 6.5; % experimental data
+lal3_real_hover_time = 6.5;
 
 error_hover_coefficient = 6.5/lal3_hover_time;
 
-error_flight_coefficient = 4/lal3_hover_time;
+error_flight_coefficient = 4.
 
 %% iteration
 
@@ -65,7 +65,7 @@ for i=1:length(database.motor_propeller)
             
             hover_amp = abs(database.motor_propeller(i).fitted_th_vs_amp(motor_load)*number_of_motor);
             
-            hover_time = ((database.battery(battery).capacity/1000)/hover_amp)*60*error_hover_coefficient;
+            hover_time = ((database.battery(battery).capacity/1000)/hover_amp)*60;
             
             final_results(general_counter).takeoff_weight = takeoff_weight;
             final_results(general_counter).hover_ampere = hover_amp;

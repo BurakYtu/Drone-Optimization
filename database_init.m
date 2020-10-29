@@ -278,6 +278,23 @@ database.motor(index).weight = 9.8;
 database.motor(index).min_input_voltage = 2*3.7;
 database.motor(index).max_input_voltage = 4*3.7;
 
+%% Motor 12
+index = 12;
+database.motor(index).name = string(index) + ") " + "LAL3 1408";
+database.motor(index).purchase_link = "https://tr.banggood.com/Eachine-1408-3750KV-3-4S-Brushless-Motor-for-LAL3-FPV-Racing-Drone-3-Inch-RC-Drone-FPV-Racing-12+12mm-p-1720780.html?cur_warehouse=CN";
+database.motor(index).stator_height = 8;
+database.motor(index).stator_diameter = 14;
+database.motor(index).price = 15;
+database.motor(index).kv = 3750;
+database.motor(index).shaft_diameter = 5;
+database.motor(index).number_of_magnet = 14;
+database.motor(index).number_of_poles = 12;
+database.motor(index).idle_power = 6;
+database.motor(index).internal_resistance = 0.0495;
+database.motor(index).weight = 17;
+database.motor(index).min_input_voltage = 3*3.7;
+database.motor(index).max_input_voltage = 4*3.7;
+
 %% Propeller 1
 index = 1; 
 database.propeller(index).name = string(index) + ") " + "Emax_AVAN_Rush_2.5";
@@ -447,6 +464,19 @@ database.propeller(index).inertia = nan;
 database.propeller(index).hub_inner_diameter = 1.5;
 database.propeller(index).is_foldable = "no";
 
+%% Propeller 14
+index = 14;
+database.propeller(index).name = string(index) + ") " + "Racerstar 3040 3-blade";
+database.propeller(index).purchase_link = "https://www.banggood.com/4-Pairs-Racerstar-Tornado-3040-3x4-3-Inch-3-Blade-Propeller-for-1306-1806-Motor-RC-Drone-FPV-Racing-p-1628788.html?ID=46107&cur_warehouse=CN";
+database.propeller(index).price = 1.86;
+database.propeller(index).diameter = 3;
+database.propeller(index).pitch = 4;
+database.propeller(index).number_of_blade = 3;
+database.propeller(index).weight = 1.7;
+database.propeller(index).inertia = nan;
+database.propeller(index).hub_inner_diameter = 5;
+database.propeller(index).is_foldable = "no";
+
 %% Battery 1
 index = 1;
 database.battery(index).name = string(index) + ") " + "Molicel_INR21700-P42A";
@@ -575,6 +605,19 @@ database.battery(index).life_cycle = 500;
 database.battery(index).voltage = 3.7;
 database.battery(index).weight = 50;
 database.battery(index).type = "Li-ion";
+database.battery(index).protection = "no";
+
+%% Battery 11
+index = 11;
+database.battery(index).name = string(index) + ") " + "Gens_Tattu_14.8V_650mAh";
+database.battery(index).purchase_link = "https://www.banggood.com/Gens-Tattu-14_8V-650mAh-75C-4S1P-Lipo-Battery-With-XT30-Plug-For-RC-FPV-Quadcopter-p-1340253.html?utm_source=google&utm_medium=cpc_ods&utm_content=nolan&utm_campaign=nolan-tra-content-sds-pc-pur-content&ad_id=253435085246&gclid=CjwKCAjw0On8BRAgEiwAincsHAVUcdG6Z0WHQ3J6Cb5Z3WKH1lxlR2gSvrAGR2el0Mmc9WXxEczkbRoCSTMQAvD_BwE&cur_warehouse=CN";
+database.battery(index).price = 17.13;
+database.battery(index).capacity = 650;
+database.battery(index).discharge_rate = 75;
+database.battery(index).life_cycle = 500;
+database.battery(index).voltage = 14.8;
+database.battery(index).weight = 77;
+database.battery(index).type = "Li-Po";
 database.battery(index).protection = "no";
 
 %% Motor_Propeller 1
@@ -872,8 +915,8 @@ database.motor_propeller(index).thrust = [0;189;229;293;353;358;366];
 database.motor_propeller(index).ampere = [0;2.58;3.37;5.25;7.56;8.69;11.28];
 database.motor_propeller(index).watt   = [0;41.3;53.9;84;121;139;180.5];
 database.motor_propeller(index).voltage = 14.8;
-database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"smoothingspline");
-database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"smoothingspline");
+database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"exp1");
+database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"exp1");
 database.motor_propeller(index).source = "https://shop.iflight-rc.com/index.php?route=product/product&product_id=895";
 
 %% Motor_Propeller 26 
@@ -1079,10 +1122,26 @@ database.motor_propeller(index).voltage = 14.8;
 database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"poly2");
 database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly2");
 database.motor_propeller(index).source = "https://www.banggood.com/GEPRC-GR1404-1404-3850KV-2~4S-1_5mm-Shaft-Brushless-Motor-for-Cinewhoop-Whoop-RC-Drone-FPV-Racing-p-1653741.html?rmmds=search&cur_warehouse=CN";
+
+%% Motor_Propeller 43 
+index = 43;
+database.motor_propeller(index).motor = database.motor(12);
+database.motor_propeller(index).propeller = database.propeller(14);
+database.motor_propeller(index).thrust = [0;205;228;253;277;311;344;375;408;437;468;532];
+database.motor_propeller(index).ampere = [0;5.07;5.91;6.92;7.87;9.16;10.49;11.89;13.78;15.9;17.2;19.8];
+database.motor_propeller(index).watt   = [0;77.064;89.832;105.184;119.624;139.232;159.448;180.728;209.456;241.68;261.44;300.96];
+database.motor_propeller(index).voltage = 14.8;
+database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"poly2");
+database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly2");
+database.motor_propeller(index).source = "NaN";
+
 %%
 
 save database
 clc
+
+% i = 43;
+% plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
 
 % for i=1:42
 %    figure
