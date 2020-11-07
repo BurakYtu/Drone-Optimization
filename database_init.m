@@ -620,6 +620,19 @@ database.battery(index).weight = 77;
 database.battery(index).type = "Li-Po";
 database.battery(index).protection = "no";
 
+%% Battery 12
+index = 12;
+database.battery(index).name = string(index) + ") " + "Panasonic NCR18650B";
+database.battery(index).purchase_link = "https://www.pilburada.com/panasonic/sanyo-ncr18650b-3400-mah-li-ion-pil";
+database.battery(index).price = 8.21;
+database.battery(index).capacity = 3400;
+database.battery(index).discharge_rate = 2;
+database.battery(index).life_cycle = 500;
+database.battery(index).voltage = 3.7;
+database.battery(index).weight = 46;
+database.battery(index).type = "Li-ion";
+database.battery(index).protection = "no";
+
 %% Motor_Propeller 1
 index = 1;
 database.motor_propeller(index).motor = database.motor(1);
@@ -1135,7 +1148,7 @@ database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(
 database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly2");
 database.motor_propeller(index).source = "NaN";
 
-%%
+%% Save and Show
 
 save database
 clc
