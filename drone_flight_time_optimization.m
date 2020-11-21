@@ -6,10 +6,7 @@ if exist('database.mat')
 else
     run(database_init.m)
 end
-
-
 %% Error for hover time from LAL3 flight test
-
 lal3_weight = 175;
 
 lal3_motor_load = (175 + database.battery(11).weight)/4;
@@ -25,7 +22,6 @@ error_hover_coefficient = 6.5/lal3_hover_time;
 error_flight_coefficient_acro = 4/lal3_hover_time;
 
 %% Error for flight time from OL flight test
-
 flywoo_explorer_lr_weight = 163;
 flywoo_packing_weight = 23;
 fllywoo_battery_weight = database.battery(12).weight * (database.motor_propeller(18).voltage)/3.14 + flywoo_packing_weight;
@@ -43,14 +39,13 @@ flywoo_hover_time = (database.battery(12).capacity/1000)/flywoo_hover_amp*60 * e
 flywoo_flight_time = (database.battery(12).capacity/1000)/(flywoo_hover_amp)*60;
 
 %% Filtering Data
-
-filter_hover_time_lower_limit = 20;         
-filter_configuration = 6;
+filter_hover_time_lower_limit = 20;
+filter_hover_time_upper_limit = 25; % Ekle
+filter_configuration = 6;   
 filter_voltage = 14.8;
-filter_takeoff_weight_upper_limit = 800;
+filter_takeoff_weight_upper_limit = 1000;
 
 %% Iteration
-
 plot_3d_hover_time = zeros(1,1);
 filtered_results = struct();
 
@@ -86,15 +81,13 @@ for i=1:length(database.motor_propeller)
             final_results(general_counter).battery = database.battery(battery);
             
             battery_weight = database.battery(battery).weight * (database.motor_propeller(i).voltage)/3.14 + packing_weight;
-            
+   
             takeoff_weight = nvidia_jetson_nano_naked_weight + nvidia_jetson_nano_pcb_weight + nvidia_jetson_nano_heatsink_weight + seek_thermal_compact_pro_weight + control_board_weight + GPS_weight + optical_flow_weight + shield_weight + wiring_weight + motor_weight + esc_weight + wiring_weight + frame_weight + battery_weight;
             
-            motor_load = takeoff_weight/number_of_motor;
-            
+            motor_load = takeoff_weight/number_of_motor; 
             hover_amp = abs(database.motor_propeller(i).fitted_th_vs_amp(motor_load)*number_of_motor);
             
             hover_time = ((database.battery(battery).capacity/1000)/hover_amp)*60*error_hover_coefficient;
-            
             flight_time = ((database.battery(battery).capacity/1000)/(hover_amp))*60;
             
             final_results(general_counter).takeoff_weight = takeoff_weight;
@@ -120,10 +113,7 @@ set = final_results(I);
 
 plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
 
-count = 1;
-
 %% Filtering Data
-
 for i = 1:length(final_results)
 
        filtered_results(i).couple = final_results(i).couple;
@@ -159,9 +149,10 @@ if(filter_takeoff_weight_upper_limit)
 end
 
 %% 3d PLOT
-
 figure
 [X,Y] = meshgrid((1:length(database.motor_propeller)),(1:length(database.battery)));
 splot = surf(X,Y,plot_3d_hover_time,'FaceColor','interp'); %,'EdgeColor','none'
 
-%%
+xlabel('Motor-Propeller Pairs')
+ylabel('Battery')
+zlabel('Hover Time')

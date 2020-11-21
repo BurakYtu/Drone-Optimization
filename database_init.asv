@@ -304,13 +304,13 @@ database.motor(index).stator_diameter = 14;
 database.motor(index).price = 12;
 database.motor(index).kv = 3000;
 database.motor(index).shaft_diameter = 1.5;
-database.motor(index).number_of_magnet = 12;
-database.motor(index).number_of_poles = 9;
-database.motor(index).idle_power = NaN;
-database.motor(index).internal_resistance = 0.295;
-database.motor(index).weight = 11;
-database.motor(index).min_input_voltage = 4*3.7;
-database.motor(index).max_input_voltage = 6*3.7;
+database.motor(index).number_of_magnet = 14;
+database.motor(index).number_of_poles = 12;
+database.motor(index).idle_power = 6;
+database.motor(index).internal_resistance = 0.0495;
+database.motor(index).weight = 17;
+database.motor(index).min_input_voltage = 3*3.7;
+database.motor(index).max_input_voltage = 4*3.7;
 
 %% Propeller 1
 index = 1; 
@@ -494,19 +494,6 @@ database.propeller(index).inertia = nan;
 database.propeller(index).hub_inner_diameter = 5;
 database.propeller(index).is_foldable = "no";
 
-%% Propeller 15
-index = 15;
-database.propeller(index).name = string(index) + ") " + "Gemfan Hurricane 4024";
-database.propeller(index).purchase_link = "https://www.banggood.com/4-Pairs-Gemfan-Hurricane-4024-2-blade-4-Inch-PC-Propeller-for-1408-1506-Brushless-Motor-RC-Drone-FPV-Racing-p-1657418.html?cur_warehouse=CN&ID=3238";
-database.propeller(index).price = 1.8;
-database.propeller(index).diameter = 4;
-database.propeller(index).pitch = 2.4;
-database.propeller(index).number_of_blade = 2;
-database.propeller(index).weight = 1.58;
-database.propeller(index).inertia = nan;
-database.propeller(index).hub_inner_diameter = 1.5;
-database.propeller(index).is_foldable = "no";
-
 %% Battery 1
 index = 1;
 database.battery(index).name = string(index) + ") " + "Molicel_INR21700-P42A";
@@ -660,19 +647,6 @@ database.battery(index).discharge_rate = 2;
 database.battery(index).life_cycle = 500;
 database.battery(index).voltage = 3.7;
 database.battery(index).weight = 46;
-database.battery(index).type = "Li-ion";
-database.battery(index).protection = "no";
-
-%% Battery 13
-index = 13;
-database.battery(index).name = string(index) + ") " + "Basen BS186Q 18650";
-database.battery(index).purchase_link = "https://www.banggood.com/2pcs-Basen-BS186Q-18650-3100mah-3_7V-40A-High-Drain-Flat-Top-Rechargeable-Li-ion-Battery-p-1038113.html?utm_campaign=8708270&utm_content=3312&p=WT25071682749201505I&cur_warehouse=CN";
-database.battery(index).price = 17.95;
-database.battery(index).capacity = 3100;
-database.battery(index).discharge_rate = 12;
-database.battery(index).life_cycle = 500;
-database.battery(index).voltage = 3.7;
-database.battery(index).weight = 47;
 database.battery(index).type = "Li-ion";
 database.battery(index).protection = "no";
 
@@ -1191,36 +1165,12 @@ database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(
 database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly2");
 database.motor_propeller(index).source = "NaN";
 
-%% Motor_Propeller 44
-index = 44;
-database.motor_propeller(index).motor = database.motor(13);
-database.motor_propeller(index).propeller = database.propeller(15);
-database.motor_propeller(index).thrust = [0;60;80;100;120;140;160;180;200;220;240;260;280;300;320;340;360;380];
-database.motor_propeller(index).ampere = [0;1.18;1.53;1.88;2.23;2.64;3.06;3.54;4.04;4.62;5.21;5.92;6.76;7.6;8.43;9.44;10.47;11.56];
-database.motor_propeller(index).watt   = [0;18.83;24.55;30.13;35.69;42.17;48.88;56.59;64.63;73.87;83.4;94.68;108.1;121.52;134.95;151.03;167.58;185.4];
-database.motor_propeller(index).voltage = 14.8;
-database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"poly4");
-database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly4");
-database.motor_propeller(index).source = "NaN";
-
-%% Motor_Propeller 45
-index = 45;
-database.motor_propeller(index).motor = database.motor(13);
-database.motor_propeller(index).propeller = database.propeller(7);
-database.motor_propeller(index).thrust = [0;80;100;120;140;160;180;200;220;240;260;280;300;320;340;360;380;390];
-database.motor_propeller(index).ampere = [0;1.37;1.79;2.22;2.71;3.35;4.1;4.97;5.84;6.66;7.49;8.31;8.96;9.46;9.97;10.47;11.68;12.32];
-database.motor_propeller(index).watt   = [0;21.91;28.67;35.44;43.41;53.62;65.66;79.55;93.44;106.61;119.78;132.95;143.32;151.38;159.45;167.51;186.83;197.6];
-database.motor_propeller(index).voltage = 14.8;
-database.motor_propeller(index).fitted_th_vs_amp = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).ampere,"poly6");
-database.motor_propeller(index).fitted_th_vs_watt = fit(database.motor_propeller(index).thrust,database.motor_propeller(index).watt,"poly6");
-database.motor_propeller(index).source = "NaN";
-
 %% Save and Show
 
 save database
 clc
 
-% i = 45;
+% i = 43;
 % plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
 
 % for i=1:42
