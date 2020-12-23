@@ -126,7 +126,7 @@ end
 
 li_ion_density_average = x/y; % mWh/g
 
-max_battery_capacity = 5000;
+max_battery_capacity = 400;
 
 for i=1:length(database.motor_propeller)
     
@@ -186,6 +186,10 @@ end
 %     fit()
 %     
 % end
+
+
+
+
 
 %% Filtering Data
 
@@ -269,7 +273,7 @@ for cs=1:calculate_subs
     xlabel('Motor-Propeller Pairs')
     ylabel('Battery')
     zlabel('Hover Time')
-    title("Configuration :" + int2str(minimum_number_of_motor + (cs-1)*2) + " Flight Time Iteration")
+    title("Configuration :" + int2str(minimum_number_of_motor + (cs-1)*2) + " Flight Time Optimization")
     
     pos = pos+1;
     subplot(calculate_subs,2,pos);
@@ -288,8 +292,8 @@ figure
 for cs=1:calculate_subs
     
     subplot(calculate_subs,2,pos);
-    [X2,Y2] = meshgrid((1:length(database.motor_propeller)),(1:max_battery_capacity));
-    splot = surf(X2,Y2,config_opt((minimum_number_of_motor + (cs-1)*2)).plot_3d_hover_time_opt,'FaceColor','interp','EdgeColor','none');
+    [X1,Y2] = meshgrid((1:length(database.motor_propeller)),(1:max_battery_capacity));
+    splot = surf(X1,Y2,config_opt((minimum_number_of_motor + (cs-1)*2)).plot_3d_hover_time_opt,'FaceColor','interp','EdgeColor','none');
 
     xlabel('Motor-Propeller Pairs')
     ylabel('Battery mAh')
@@ -298,10 +302,21 @@ for cs=1:calculate_subs
     
     pos = pos+1;
     subplot(calculate_subs,2,pos);
-    plot(Y2,config_opt(minimum_number_of_motor + (cs-1)*2).plot_3d_hover_time_opt)
+    plot(Y,config(minimum_number_of_motor + (cs-1)*2).plot_3d_hover_time)
     title("Configuration :" + int2str((minimum_number_of_motor + (cs-1)*2)) + " Battery mAh vs Hover Time")
     ylabel('Hover Time')
     xlabel('Battery mAh')
     
     pos = pos+1;
 end
+
+xlabel('Motor-Propeller Pairs')
+ylabel('Battery mAh')
+zlabel('Hover Time')
+title('Flight Time Optimization')
+
+figure
+plot(Y2,plot_3d_hover_time_opt)
+title('Battery mAh vs Hover Time')
+
+

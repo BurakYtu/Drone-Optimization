@@ -11,7 +11,7 @@ clc
 % shaft_diameter      -> mm
 % number_of_magnet    -> number
 % number_of_poles     -> number
-% idle_current        -> Watt
+% idle_power          -> Watt
 % internal_resistance -> miliOhm
 % weigth              -> gram
 % min_input_voltage   -> volt
@@ -41,6 +41,16 @@ clc
 % type                -> string
 % protection          -> string
 
+% %%%%%%% motor_propeller %%%%%%%
+% motor               -> struct
+% propeller           -> struct
+% thrust              -> gram [array]
+% ampere              -> ampere [array]
+% watt                -> watt [array]
+% voltage             -> voltage [array]
+% fitted_th_vs_amp    -> thrust vs ampere [polynomial]
+% fitted_th_vs_watt   -> thrust vs watt [polynomial]
+
 database.help = [
 "%%%%%%%%%%%  Motor  %%%%%%%%%%%"  
 "name                -> string"
@@ -52,7 +62,7 @@ database.help = [
 "shaft_diameter      -> mm"
 "number_of_magnet    -> number"
 "number_of_poles     -> number"
-"idle_current        -> Watt"
+"idle_power          -> Watt"
 "internal_resistance -> miliOhm"
 "weigth              -> gram"
 "min_input_voltage   -> volt"
@@ -1223,8 +1233,8 @@ clc
 % i = 45;
 % plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
 
-% for i=1:42
-%    figure
-%    plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
-% 
-% end
+for i=1:4:40
+   figure
+   plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
+
+end
