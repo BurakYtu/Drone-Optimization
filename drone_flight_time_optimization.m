@@ -81,12 +81,7 @@ for i=1:length(database.motor_propeller)
         store_count = 1;
         
         for battery=1:length(database.battery)
-            
-            final_results(general_counter).couple = i;
-            final_results(general_counter).motor = database.motor_propeller(i).motor;
-            final_results(general_counter).propeller = database.motor_propeller(i).propeller;
-            final_results(general_counter).battery = database.battery(battery);
-            
+
             battery_weight = database.battery(battery).weight * (database.motor_propeller(i).voltage)/3.14 + packing_weight;
    
             takeoff_weight = constants + motor_weight + total_esc_weight + wiring_weight + frame_weight + battery_weight;
@@ -94,19 +89,25 @@ for i=1:length(database.motor_propeller)
             motor_load = takeoff_weight/number_of_motor; 
             hover_amp = abs(database.motor_propeller(i).fitted_th_vs_amp(motor_load)*number_of_motor);
             
-            hover_time = ((database.battery(battery).capacity/1000)/hover_amp)*60*error_hover_coefficient;
+            if hover_amp < ((database.battery(battery).capacity/1000)*database.battery(battery).discharge_rate)
             
-            final_results(general_counter).takeoff_weight = takeoff_weight;
-            final_results(general_counter).hover_ampere = hover_amp;
-            final_results(general_counter).hover_time = hover_time;
-            % final_results(general_counter).flight_time = flight_time;
-            final_results(general_counter).configuration = number_of_motor;
-            final_results(general_counter).voltage = database.motor_propeller(i).voltage;
-            
-            config(number_of_motor).plot_3d_hover_time(battery,i) = hover_time;
-            
-            general_counter = general_counter+1;
-            
+                hover_time = ((database.battery(battery).capacity/1000)/hover_amp)*60*error_hover_coefficient;
+           
+                final_results(general_counter).couple = i;
+                final_results(general_counter).motor = database.motor_propeller(i).motor;
+                final_results(general_counter).propeller = database.motor_propeller(i).propeller;
+                final_results(general_counter).battery = database.battery(battery);
+                final_results(general_counter).takeoff_weight = takeoff_weight;
+                final_results(general_counter).hover_ampere = hover_amp;
+                final_results(general_counter).hover_time = hover_time;
+                % final_results(general_counter).flight_time = flight_time;
+                final_results(general_counter).configuration = number_of_motor;
+                final_results(general_counter).voltage = database.motor_propeller(i).voltage;
+
+                config(number_of_motor).plot_3d_hover_time(battery,i) = hover_time;
+
+                general_counter = general_counter+1;
+            end
         end
     end
 end
@@ -117,14 +118,19 @@ filtered_results_opt = struct();
 
 x = 0;
 y = 0;
+z = 0;
 
 for b=1:length(database.battery)
     
     x = x + database.battery(b).capacity * database.battery(b).voltage;  %mWh
     y = y + database.battery(b).weight; %g
+    z = z + database.battery(b).discharge_rate;
 end
 
+sample_rate = 50;
+
 li_ion_density_average = x/y; % mWh/g
+li_ion_discharge_average = z/length(database.battery);
 
 max_battery_capacity = 5000;
 
@@ -141,10 +147,6 @@ for i=1:length(database.motor_propeller)
         
         for battery_capacity=1:max_battery_capacity
             
-            final_results_opt(general_counter).couple = i;
-            final_results_opt(general_counter).motor = database.motor_propeller(i).motor;
-            final_results_opt(general_counter).propeller = database.motor_propeller(i).propeller;
-            
             battery_weight = (battery_capacity*database.motor_propeller(i).voltage)/li_ion_density_average + 10;
             
             battery_weight_factor = battery_weight/10;
@@ -154,38 +156,54 @@ for i=1:length(database.motor_propeller)
             motor_load = takeoff_weight/number_of_motor; 
             hover_amp = abs(database.motor_propeller(i).fitted_th_vs_amp(motor_load)*number_of_motor);
             
-            hover_time = ((battery_capacity/1000)/hover_amp)*60*error_hover_coefficient;
-            
-            final_results_opt(general_counter).takeoff_weight = takeoff_weight;
-            final_results_opt(general_counter).hover_ampere = hover_amp;
-            final_results_opt(general_counter).hover_time = hover_time;
-            % final_results_opt(general_counter).flight_time = flight_time;
-            final_results_opt(general_counter).configuration = number_of_motor;
-            final_results_opt(general_counter).voltage = database.motor_propeller(i).voltage;
-            final_results_opt(general_counter).battery_cap = battery_capacity;
-            
-            config_opt(number_of_motor).plot_3d_hover_time_opt(battery_capacity,i) = hover_time;
-            
-            if(mod(battery_capacity,20)==0)
-                sample_data_to_fit(i).config(number_of_motor).hover_time(store_count) = hover_time;
-                store_count = store_count+1;
+            if(hover_amp < (battery_capacity/1000)*li_ion_discharge_average)
+                hover_time = ((battery_capacity/1000)/hover_amp)*60*error_hover_coefficient;
+
+                final_results_opt(general_counter).couple = i;
+                final_results_opt(general_counter).motor = database.motor_propeller(i).motor;
+                final_results_opt(general_counter).propeller = database.motor_propeller(i).propeller;
+                final_results_opt(general_counter).takeoff_weight = takeoff_weight;
+                final_results_opt(general_counter).hover_ampere = hover_amp;
+                final_results_opt(general_counter).hover_time = hover_time;
+                % final_results_opt(general_counter).flight_time = flight_time;
+                final_results_opt(general_counter).configuration = number_of_motor;
+                final_results_opt(general_counter).voltage = database.motor_propeller(i).voltage;
+                final_results_opt(general_counter).battery_cap = battery_capacity;
+
+                config_opt(number_of_motor).plot_3d_hover_time_opt(battery_capacity,i) = hover_time;
+                
+                general_counter = general_counter+1;
+                
+                if(mod(battery_capacity,sample_rate)==0)
+                    sample_data_to_fit(i).config(number_of_motor).hover_time(store_count) = hover_time;
+                    store_count = store_count+1;
+                end
+            else
+                sample_data_to_fit(i).config(number_of_motor).hover_time(1) = -1;
             end
-            
-            general_counter = general_counter+1;
-            
         end
     end
 end
 
-% for d=1:length(final_results_opt.couple)
-%     
-%     for e=1:max_battery_capacity/200
-%         
-%     end
-%     
-%     fit()
-%     
-% end
+conf_number = (maximum_number_of_motor-minimum_number_of_motor)/2 + 1;
+
+for d=1:conf_number
+    
+    for e=1:length(sample_data_to_fit)
+        if(sample_data_to_fit(e).config(minimum_number_of_motor + (d-1)*2).hover_time(1) ~= -1)
+            plot_mah = ((length(1:sample_rate:max_battery_capacity)-length(sample_data_to_fit(e).config(minimum_number_of_motor + (d-1)*2).hover_time))*sample_rate+1):sample_rate:max_battery_capacity;
+            fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit = fit(plot_mah.',sample_data_to_fit(e).config(minimum_number_of_motor + (d-1)*2).hover_time.',"poly4");
+            fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).diff = differentiate(fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit,plot_mah);
+            fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).mah = plot_mah;
+            fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).fitted_dif = fit(differentiate(fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit,plot_mah),plot_mah.',"poly4");
+            
+            diff_max = fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).diff(1);
+            diff_target = diff_max/2;
+            fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).efficient_mah = fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).fitted_dif(diff_target);
+        end
+    end 
+end
+
 
 %% Filtering Data
 
