@@ -200,10 +200,13 @@ for d=1:conf_number
             diff_max = fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).diff(1);
             diff_target = diff_max/2;
             fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).efficient_mah = fitted_mah_time_derivative.couple(e).config(minimum_number_of_motor + (d-1)*2).fitted_dif(diff_target);
+            
+            plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).couple(e) = e;
+            plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_mah(e) = fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).efficient_mah;
+            plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_time(e) = fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit(plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_mah(e));
         end
     end 
 end
-
 
 %% Filtering Data
 
@@ -305,21 +308,27 @@ pos = 1;
 figure
 for cs=1:calculate_subs
     
-    subplot(calculate_subs,2,pos);
+    subplot(calculate_subs,3,pos);
     [X2,Y2] = meshgrid((1:length(database.motor_propeller)),(1:max_battery_capacity));
     splot = surf(X2,Y2,config_opt((minimum_number_of_motor + (cs-1)*2)).plot_3d_hover_time_opt,'FaceColor','interp','EdgeColor','none');
 
     xlabel('Motor-Propeller Pairs')
     ylabel('Battery mAh')
     zlabel('Hover Time')
-    title("Configuration :" + int2str(minimum_number_of_motor + (cs-1)*2) + " Flight Time Optimization")
-    
+    title("Configuration :" + int2str(minimum_number_of_motor + (cs-1)*2) + " Flight Time Optimization")  
     pos = pos+1;
-    subplot(calculate_subs,2,pos);
+    
+    subplot(calculate_subs,3,pos);
     plot(Y2,config_opt(minimum_number_of_motor + (cs-1)*2).plot_3d_hover_time_opt)
     title("Configuration :" + int2str((minimum_number_of_motor + (cs-1)*2)) + " Battery mAh vs Hover Time")
     ylabel('Hover Time')
     xlabel('Battery mAh')
+    pos = pos+1;
     
+    subplot(calculate_subs,3,pos);
+    plot3(plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).couple,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_mah,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_time)
+    grid on
     pos = pos+1;
 end
+
+
