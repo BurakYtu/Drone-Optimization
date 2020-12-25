@@ -21,23 +21,6 @@ error_hover_coefficient = 6.5/lal3_hover_time;
 
 error_flight_coefficient_acro = 4/lal3_hover_time;
 
-%% Error for flight time from OL flight test
-flywoo_explorer_lr_weight = 163;
-flywoo_packing_weight = 23;
-fllywoo_battery_weight = database.battery(12).weight * (database.motor_propeller(18).voltage)/3.14 + flywoo_packing_weight;
-
-flywoo_load = (flywoo_explorer_lr_weight + fllywoo_battery_weight)/4;
-
-flywoo_hover_amp = database.motor_propeller(18).fitted_th_vs_amp(flywoo_load)*4;
-
-flywoo_50kph_amp = 7.29;    % experimental data
-
-error_flight_coefficient_50kph = 7.29/flywoo_hover_amp;
-
-flywoo_hover_time = (database.battery(12).capacity/1000)/flywoo_hover_amp*60 * error_hover_coefficient;
-
-flywoo_flight_time = (database.battery(12).capacity/1000)/(flywoo_hover_amp)*60;
-
 %% Filtering Data
 filter_hover_time_lower_limit = 8;
 filter_hover_time_upper_limit = 12; % Ekle
@@ -132,7 +115,7 @@ sample_rate = 50;
 li_ion_density_average = x/y; % mWh/g
 li_ion_discharge_average = z/length(database.battery);
 
-max_battery_capacity = 5000;
+max_battery_capacity = 10000;
 
 for i=1:length(database.motor_propeller)
     
@@ -203,7 +186,7 @@ for d=1:conf_number
             
             plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).couple(e) = e;
             plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_mah(e) = fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).efficient_mah;
-            plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_time(e) = fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit(plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_mah);
+            plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_time(e) = fitted_mah_time.couple(e).config(minimum_number_of_motor + (d-1)*2).fit(plot_mah_couple_time.config(minimum_number_of_motor + (d-1)*2).eff_mah(e));
         end
     end 
 end
@@ -303,7 +286,6 @@ for cs=1:calculate_subs
 end
 
 %% 3D PLOT Optimization
-
 pos = 1;
 figure
 for cs=1:calculate_subs
@@ -325,8 +307,11 @@ for cs=1:calculate_subs
     xlabel('Battery mAh')
     pos = pos+1;
     
-%     subplot(calculate_subs,3,pos);
-%     plot3()
+    subplot(calculate_subs,3,pos);
+    plot3(plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).couple,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_mah,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_time)
+    grid on
+    pos = pos+1;
 end
 
-
+database.motor_propeller(18).motor.name
+database.motor_propeller(18).propeller.name

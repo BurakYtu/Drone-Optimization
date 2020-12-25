@@ -21,23 +21,6 @@ error_hover_coefficient = 6.5/lal3_hover_time;
 
 error_flight_coefficient_acro = 4/lal3_hover_time;
 
-%% Error for flight time from OL flight test
-flywoo_explorer_lr_weight = 163;
-flywoo_packing_weight = 23;
-fllywoo_battery_weight = database.battery(12).weight * (database.motor_propeller(18).voltage)/3.14 + flywoo_packing_weight;
-
-flywoo_load = (flywoo_explorer_lr_weight + fllywoo_battery_weight)/4;
-
-flywoo_hover_amp = database.motor_propeller(18).fitted_th_vs_amp(flywoo_load)*4;
-
-flywoo_50kph_amp = 7.29;    % experimental data
-
-error_flight_coefficient_50kph = 7.29/flywoo_hover_amp;
-
-flywoo_hover_time = (database.battery(12).capacity/1000)/flywoo_hover_amp*60 * error_hover_coefficient;
-
-flywoo_flight_time = (database.battery(12).capacity/1000)/(flywoo_hover_amp)*60;
-
 %% Filtering Data
 filter_hover_time_lower_limit = 8;
 filter_hover_time_upper_limit = 12; % Ekle
@@ -119,20 +102,22 @@ filtered_results_opt = struct();
 x = 0;
 y = 0;
 z = 0;
+div = 0;
 
 for b=1:length(database.battery)
-    
-    x = x + database.battery(b).capacity * database.battery(b).voltage;  %mWh
-    y = y + database.battery(b).weight; %g
-    z = z + database.battery(b).discharge_rate;
+    if(database.battery(b).type == "Li-ion")
+        x = x + database.battery(b).capacity * database.battery(b).voltage;  %mWh
+        y = y + database.battery(b).weight; %g
+        z = z + database.battery(b).discharge_rate; 
+    end
+    div = div + 1;
 end
 
-sample_rate = 50;
-
 li_ion_density_average = x/y; % mWh/g
-li_ion_discharge_average = z/length(database.battery);
+li_ion_discharge_average = z/div;
 
-max_battery_capacity = 5000;
+max_battery_capacity = 10000;
+sample_rate = 50;
 
 for i=1:length(database.motor_propeller)
     
@@ -302,8 +287,11 @@ for cs=1:calculate_subs
     pos = pos+1;
 end
 
-%% 3D PLOT Optimization
+database.motor_propeller(18).motor.name
+database.motor_propeller(18).propeller.name
+database.battery(9).name
 
+%% 3D PLOT Optimization
 pos = 1;
 figure
 for cs=1:calculate_subs
@@ -311,7 +299,6 @@ for cs=1:calculate_subs
     subplot(calculate_subs,3,pos);
     [X2,Y2] = meshgrid((1:length(database.motor_propeller)),(1:max_battery_capacity));
     splot = surf(X2,Y2,config_opt((minimum_number_of_motor + (cs-1)*2)).plot_3d_hover_time_opt,'FaceColor','interp','EdgeColor','none');
-
     xlabel('Motor-Propeller Pairs')
     ylabel('Battery mAh')
     zlabel('Hover Time')
@@ -326,9 +313,11 @@ for cs=1:calculate_subs
     pos = pos+1;
     
     subplot(calculate_subs,3,pos);
-    plot3(plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).couple,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_mah,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_time)
+    plot3(plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).couple,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_mah,plot_mah_couple_time.config(minimum_number_of_motor + (cs-1)*2).eff_time,'o')
     grid on
+    xlabel('Motor-Propeller Pairs')
+    ylabel('Battery mAh')
+    zlabel('Hover Time')
+    title("Configuration :" + int2str(minimum_number_of_motor + (cs-1)*2) + " Perfect Points")  
     pos = pos+1;
 end
-
-
