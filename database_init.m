@@ -1233,8 +1233,7 @@ clc
 % i = 45;
 % plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
 
-for i=1:4:40
-   figure
-   plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
-
-end
+% for i=1:4:40
+%    figure
+%    plot(database.motor_propeller(i).fitted_th_vs_amp,database.motor_propeller(i).thrust,database.motor_propeller(i).ampere)
+% end

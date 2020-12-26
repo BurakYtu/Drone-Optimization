@@ -23,7 +23,7 @@ error_flight_coefficient_acro = 4/lal3_hover_time;
 
 %% Filtering Data
 filter_hover_time_lower_limit = 8;
-filter_hover_time_upper_limit = 12; % Ekle
+filter_hover_time_upper_limit = 12;
 filter_configuration = 6;   
 filter_voltage = 14.8;
 filter_takeoff_weight_upper_limit = 0;
